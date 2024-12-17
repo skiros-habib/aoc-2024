@@ -17,5 +17,6 @@ pub fn run_p1() {
 pub fn run_p2() {
     assert_eq!(part2::solve(EXAMPLE), 6);
     let result = part2::solve(INPUT);
+    assert_eq!(result, 1767);
     println!("Day 6, Part 2: {}", result);
 }
