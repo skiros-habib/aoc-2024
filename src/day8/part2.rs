@@ -20,19 +20,27 @@ fn get_antinodes(
     first: (usize, usize),
     second: (usize, usize),
     bounds: (usize, usize),
-) -> [Option<(usize, usize)>; 2] {
+) -> BTreeSet<(usize, usize)> {
+    let mut result = BTreeSet::new();
     let (x1, y1) = first;
     let (x2, y2) = second;
     let dx = x2 - x1;
     let dy = y2 as isize - y1 as isize;
-    [
-        check_bounds(
-            x1.checked_sub(dx)
-                .zip(usize::try_from((y1 as isize) - dy).ok()),
-            bounds,
-        ),
-        check_bounds(Some(x2 + dx).zip(y2.checked_add_signed(dy)), bounds),
-    ]
+    let mut test_x = Some(x1);
+    let mut test_y = Some(y1);
+    while let Some((x, y)) = check_bounds(test_x.zip(test_y), bounds) {
+        result.insert((x, y));
+        test_x = x.checked_sub(dx);
+        test_y = usize::try_from((y as isize) - dy).ok();
+    }
+    let mut test_x = Some(x2);
+    let mut test_y = Some(y2);
+    while let Some((x, y)) = check_bounds(test_x.zip(test_y), bounds) {
+        result.insert((x, y));
+        test_x = Some(x + dx);
+        test_y = y.checked_add_signed(dy);
+    }
+    result
 }
 
 pub fn solve(input: &str) -> usize {
@@ -41,12 +49,7 @@ pub fn solve(input: &str) -> usize {
     for (_c, coords) in info.iter() {
         for (first, second) in coords.iter().tuple_combinations() {
             let antinodes = get_antinodes(*first, *second, bounds);
-            antinodes.iter().for_each(|antinode| match antinode {
-                Some(antinode) => {
-                    all_antinodes.insert(*antinode);
-                }
-                None => {}
-            });
+            all_antinodes.extend(antinodes);
         }
     }
     all_antinodes.len()

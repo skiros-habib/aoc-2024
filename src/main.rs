@@ -23,4 +23,5 @@ fn main() {
     // day7::run_p1();
     // day7::run_p2();
     day8::run_p1();
+    day8::run_p2();
 }
