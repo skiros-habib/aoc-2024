@@ -1,30 +1,17 @@
-fn observe(stones: &[usize]) -> Vec<usize> {
-    stones
-        .iter()
-        .map(|&stone| {
-            if let Some(digits) = stone.checked_ilog10() {
-                match digits % 2 == 0 {
-                    true => [stone * 2024].iter().map(|&x| x).collect::<Vec<_>>(),
-                    false => {
-                        let pow = 10_usize.pow((digits / 2) + 1);
-                        [stone / pow, stone % pow].iter().map(|&x| x).collect()
-                    }
-                }
-            } else {
-                [0].iter().map(|&x| x).collect()
-            }
-        })
-        .flatten()
-        .collect()
-}
+use super::observe;
+use std::collections::HashMap;
 
 pub fn solve(input: &str) -> usize {
-    let mut input = input
+    let input = input
         .split_whitespace()
         .map(|x| x.parse::<usize>().unwrap())
         .collect::<Vec<usize>>();
+    let mut stones = HashMap::new();
+    input.iter().for_each(|&stone| {
+        stones.entry(stone).and_modify(|e| *e += 1).or_insert(1);
+    });
     for _ in 0..75 {
-        input = observe(&input);
+        stones = observe(stones);
     }
-    input.len()
+    stones.values().sum()
 }
