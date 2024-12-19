@@ -1,5 +1,6 @@
 // mod day1;
-mod day10;
+// mod day10;
+mod day11;
 // mod day2;
 // mod day3;
 // mod day4;
@@ -28,6 +29,8 @@ fn main() {
     // day8::run_p2();
     // day9::run_p1();
     // day9::run_p2();
-    day10::run_p1();
-    day10::run_p2();
+    // day10::run_p1();
+    // day10::run_p2();
+    day11::run_p1();
+    day11::run_p2();
 }
